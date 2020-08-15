@@ -8,7 +8,7 @@ Docker example with Apache, MySql 8.0, PhpMyAdmin and Php
 I use docker-compose as an orchestrator. To run these containers:
 
 ```
-docker-compose up -d
+docker-compose build && docker-compose up -d
 ```
 
 Open phpmyadmin at [http://localhost:8000](http://localhost:8000)
