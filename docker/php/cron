@@ -1,0 +1,11 @@
+#first 5 numbers represent time
+#minute
+#hour
+#day of month
+#month
+#day of week
+# Example run with bash shell
+* * * * *  echo "`date`: Hello World" >> /var/log/cron/cron.log 2>&1
+* * * * * /usr/local/bin/php /var/www/html/example-cron-file.php >> /var/log/cron/cron.log 2>&1
+* * * * * /usr/local/bin/php /var/www/html/example-cron-file-with-argument.php argument >> /var/log/cron/cron.log 2>&1
+# An empty line is required at the end of this file for a valid cron file.

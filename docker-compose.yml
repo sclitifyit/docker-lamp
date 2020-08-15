@@ -1,13 +1,15 @@
 version: "3.1"
 services:
     www:
-        build: .
+        build: ./docker/php
         ports: 
             - "80:80"
             - "443:443"
         volumes:
-            - ./www:/var/www/html/
-            - ./conf/php.ini:/usr/local/etc/php/php.ini
+            - ./docker/php/www:/var/www/html/
+            - ./docker/php/conf/php.ini:/usr/local/etc/php/php.ini
+            - ./docker/php/log/apache2:/var/log/apache2
+            - ./docker/php/log/cron:/var/log/cron
         links:
             - db
         networks:
