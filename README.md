@@ -12,6 +12,7 @@ docker-compose build && docker-compose up -d
 ```
 
 Open phpmyadmin at [http://localhost:8000](http://localhost:8000)
+Open web browser to look at server stats dasboard at [http://localhost:19999](http://localhost:19999)
 Open web browser to look at a simple php example at [https://localhost](https://localhost)
 
 Run mysql client:
