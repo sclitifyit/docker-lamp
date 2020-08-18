@@ -3,7 +3,7 @@ RUN apt-get update \
     && apt-get -y install tzdata cron curl \
     && apt-get install -y libzip-dev \
     && apt-get install -y zlib1g-dev libicu-dev g++ \
-    && apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev libwebp-dev \
+    && apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev libwebp-dev wget \
     && rm -rf /var/lib/apt/lists/*
 COPY server.crt /etc/apache2/ssl/server.crt
 COPY server.key /etc/apache2/ssl/server.key
@@ -19,8 +19,10 @@ RUN docker-php-ext-configure gd \
     --with-freetype-dir
 RUN docker-php-ext-install mysqli pdo_mysql zip gd exif
 
-# Enable Apache rewrite module.
-RUN a2enmod rewrite
+# Modify apache config
+RUN a2enmod rewrite && \
+    a2enmod expires && \
+    a2enmod headers
 RUN docker-php-ext-configure intl
 RUN docker-php-ext-install intl
 
