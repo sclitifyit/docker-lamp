@@ -3,7 +3,7 @@ RUN apt-get update \
     && apt-get -y install tzdata cron curl \
     && apt-get install -y libzip-dev \
     && apt-get install -y zlib1g-dev libicu-dev g++ \
-    && apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev libwebp-dev wget \
+    && apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev libwebp-dev wget sendmail \
     && rm -rf /var/lib/apt/lists/*
 COPY server.crt /etc/apache2/ssl/server.crt
 COPY server.key /etc/apache2/ssl/server.key
@@ -39,6 +39,13 @@ RUN apt-get update && apt-get install -y \
 # Enable SSL Cert
 RUN a2enmod ssl
 
+# Sendmail
+RUN echo "sendmail_path=/usr/sbin/sendmail -t -i" >> /usr/local/etc/php/conf.d/sendmail.ini 
+RUN docker-php-ext-install pdo_mysql
+RUN docker-php-ext-install zip
+RUN sed -i '/#!\/bin\/sh/aservice sendmail restart' /usr/local/bin/docker-php-entrypoint
+RUN sed -i '/#!\/bin\/sh/aecho "$(hostname -i)\t$(hostname) $(hostname).localhost" >> /etc/hosts' /usr/local/bin/docker-php-entrypoint
+
 #CRONS
 RUN cp /usr/share/zoneinfo/Europe/Bucharest /etc/localtime && \
     echo "Europe/Bucharest" > /etc/timezone
@@ -54,6 +61,9 @@ RUN crontab /etc/cron.d/cron
 RUN mkdir -p /var/log/cron
 # Add a command to base-image entrypont scritp
 RUN sed -i 's/^exec /service cron start\n\nexec /' /usr/local/bin/apache2-foreground
+
+# And clean up the image
+RUN rm -rf /var/lib/apt/lists/*
 
 # Apache Restart
 RUN service apache2 restart
